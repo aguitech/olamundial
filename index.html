@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="La Ola — Experiencia interactiva cyberpunk con cámara web. SDM Robotics.">
+    <title>La Ola · SDM Robotics 🔴</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- =========================
+         FONDO ANIMADO CYBERPUNK
+    ========================== -->
+    <div class="cyber-bg" aria-hidden="true">
+        <div class="grid"></div>
+        <div class="scanlines"></div>
+        <div class="vignette"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <!-- =========================
+         HUD SUPERIOR FIJO
+    ========================== -->
+    <header class="top-hud">
+        <div class="hud-left">
+            <span class="hud-dot"></span>
+            <span class="hud-label">SISTEMA ACTIVO</span>
+        </div>
+        <div class="hud-center">
+            <span class="hud-step" id="hud-step">09. ENERGÍA COMPLETA</span>
+        </div>
+        <div class="hud-right">
+            <span class="hud-time" id="hud-time">00:00</span>
+        </div>
+    </header>
+
+    <!-- =========================
+         PANTALLA 1: ENERGÍA COMPLETA
+    ========================== -->
+    <section class="screen active" id="screen-1">
+        <div class="screen-content">
+            <h1 class="hero-title">
+                <span class="hero-pre">¡LO ESTÁS</span>
+                <span class="hero-main">HACIENDO</span>
+                <span class="hero-accent">GENIAL!</span>
+            </h1>
+
+            <div class="hero-figure">
+                <img src="images/estadio_cyberpunk.png" alt="Estadio cyberpunk con multitud">
+            </div>
+
+            <!-- Barra de energía -->
+            <div class="energy-bar-wrap">
+                <div class="energy-label">
+                    <span>ENERGÍA COLECTIVA</span>
+                    <span class="energy-percent" id="energy-pct">100%</span>
+                </div>
+                <div class="energy-bar">
+                    <div class="energy-fill" id="energy-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <!-- Badges -->
+            <div class="badges-row">
+                <div class="badge badge-left">
+                    <div class="badge-icon">⚡</div>
+                    <div class="badge-text">
+                        <div class="badge-title">ENERGÍA COLECTIVA</div>
+                        <div class="badge-sub">100% · ¡LISTOS PARA LA OLA!</div>
+                    </div>
+                </div>
+                <div class="badge badge-right">
+                    <div class="badge-icon">📹</div>
+                    <div class="badge-text">
+                        <div class="badge-title">TE ESTAMOS VIENDO</div>
+                        <div class="badge-sub">Cámara activa · Listo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón principal -->
+            <button class="cta-button" onclick="goToScreen(2)">
+                <span class="cta-bracket-l">»</span>
+                <span class="cta-text">¡PREPÁRATE!</span>
+                <span class="cta-bracket-r">«</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- =========================
+         PANTALLA 2: HAZ LA OLA
+    ========================== -->
+    <section class="screen" id="screen-2">
+        <div class="screen-content">
+            <h2 class="section-heading">
+                <span class="section-pre">10.</span>
+                <span class="section-main">HAZ LA OLA</span>
+            </h2>
+
+            <h1 class="hero-title small">
+                <span class="hero-main">ENERGÍA COMPLETA</span>
+                <span class="hero-accent">¡AHORA HAZ LA OLA!</span>
+            </h1>
+
+            <!-- Cámara + visualización de la ola -->
+            <div class="ola-stage">
+                <!-- Cámara del usuario (espejo) -->
+                <div class="cam-frame">
+                    <video id="cam-video" autoplay playsinline muted></video>
+                    <canvas id="cam-canvas" class="hidden"></canvas>
+                    <div class="cam-overlay">
+                        <div class="cam-corner tl"></div>
+                        <div class="cam-corner tr"></div>
+                        <div class="cam-corner bl"></div>
+                        <div class="cam-corner br"></div>
+                        <div class="cam-status" id="cam-status">CÁMARA: INICIANDO...</div>
+                    </div>
+                    <!-- Indicador de movimiento del usuario -->
+                    <div class="motion-indicator" id="motion-indicator">
+                        <div class="motion-ring"></div>
+                        <div class="motion-ring outer"></div>
+                        <div class="motion-pct" id="motion-pct">0%</div>
+                    </div>
+                </div>
+
+                <!-- Visualización de la Ola viajando -->
+                <div class="ola-visualization">
+                    <div class="ola-fan-row" id="ola-fan-row">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    <div class="ola-arrow" id="ola-arrow"></div>
+                    <div class="ola-bg" style="background-image: url('images/fan_silhouette.png');"></div>
+                </div>
+            </div>
+
+            <p class="ola-hint">
+                <span class="hint-icon">↗</span>
+                Mueve tus brazos siguiendo la dirección de la ola. La cámara detectará tu movimiento.
+            </p>
+
+            <!-- Checklist de la misión -->
+            <div class="mission-checklist">
+                <div class="checklist-item" data-check="1">
+                    <div class="check-box">✓</div>
+                    <span>LEVANTA LOS BRAZOS</span>
+                </div>
+                <div class="checklist-item" data-check="2">
+                    <div class="check-box">✓</div>
+                    <span>MUEVE A LA AFICIÓN</span>
+                </div>
+                <div class="checklist-item" data-check="3">
+                    <div class="check-box">✓</div>
+                    <span>APLAUDE</span>
+                </div>
+                <div class="checklist-item" data-check="4">
+                    <div class="check-box">✓</div>
+                    <span>AGITA TUS MANOS</span>
+                </div>
+                <div class="checklist-item" data-check="5">
+                    <div class="check-box">✓</div>
+                    <span>SALTA CON LA AFICIÓN</span>
+                </div>
+            </div>
+
+            <!-- Botón -->
+            <button class="cta-button secondary" id="start-ola-btn" onclick="startOla()">
+                <span class="cta-text">ACTIVAR LA OLA</span>
+            </button>
+
+            <button class="back-link" onclick="goToScreen(1)">← VOLVER AL RESUMEN</button>
+        </div>
+    </section>
+
+    <!-- =========================
+         PANTALLA 3: MISIÓN CUMPLIDA
+    ========================== -->
+    <section class="screen" id="screen-3">
+        <div class="screen-content">
+            <h2 class="section-heading">
+                <span class="section-pre">10.</span>
+                <span class="section-main">MISIÓN CUMPLIDA</span>
+            </h2>
+
+            <h1 class="hero-title">
+                <span class="hero-main">¡LO HICIMOS</span>
+                <span class="hero-accent">JUNTOS!</span>
+            </h1>
+
+            <p class="ola-hint">
+                La ola recorrió el estadio y la energía está al máximo. Eres parte de algo épico.
+            </p>
+
+            <!-- Trofeo central -->
+            <div class="trophy-stage">
+                <img src="images/trofeo_energia.png" alt="Trofeo de energía" class="trophy-img">
+                <div class="trophy-energy">ENERGÍA COLECTIVA 100%</div>
+            </div>
+
+            <!-- Badges finales -->
+            <div class="badges-row">
+                <div class="badge badge-left">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-text">
+                        <div class="badge-title">OBJETIVO ALCANZADO</div>
+                        <div class="badge-sub">LA OLA FUE ÉPICA · ⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+                <div class="badge badge-right">
+                    <div class="badge-icon">📷</div>
+                    <div class="badge-text">
+                        <div class="badge-title">¡GRACIAS POR SER PARTE!</div>
+                        <div class="badge-sub">Tu movimiento activó el estadio</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón continuar -->
+            <button class="cta-button" onclick="restartOla()">
+                <span class="cta-text">VOLVER A JUGAR</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- =========================
+         FOOTER CYBERPUNK
+    ========================== -->
+    <footer class="cyber-footer">
+        <div class="footer-line">
+            <span class="footer-brand">LA OLA</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-sub">SDM ROBOTICS</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-tag">JUNTOS SOMOS IMPARABLES</span>
+        </div>
+        <div class="footer-side-text left" aria-hidden="true">TÚ ERES EL COMANDO</div>
+        <div class="footer-side-text right" aria-hidden="true">LA OLA COMIENZA CONTIGO</div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
